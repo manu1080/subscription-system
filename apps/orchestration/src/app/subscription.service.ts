@@ -1,8 +1,9 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { SubscriptionDto } from '@subscription-microservice/dto';
 import { EmailService } from './email.service';
 import { from } from 'rxjs';
+import { EmailDto } from '../dto/email.dto';
+import { SubscriptionDto } from '../dto/subscription.dto';
 
 @Injectable()
 export class SubscriptionService implements OnModuleInit {
@@ -16,7 +17,8 @@ export class SubscriptionService implements OnModuleInit {
     this.emailService.sendSubscriptionEmail(subscriptionDto.email);
   }
 
-  cancelSubscription(email: string) {
+  cancelSubscription(emailDto: EmailDto) {
+    const email = emailDto.email;
     this.subscriptionClient.emit('cancel_subscription', JSON.stringify({ email }));
     this.emailService.sendCancelSubscriptionEmail(email);
   }

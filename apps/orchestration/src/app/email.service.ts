@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClientKafka } from "@nestjs/microservices";
-import { EmailDto } from '@email-microservice/dto';
+import { EmailSenderDto } from "../dto/emailSender.dto";
 
 const createSubscriptionSubject = 'Create Subscription';
 const cancelSubscriptionSubject = 'Cancel Subscription';
@@ -11,12 +11,12 @@ export class EmailService {
   ) { }
 
   sendSubscriptionEmail(email: string): void {
-    const data = new EmailDto(createSubscriptionSubject, email, '')
+    const data = new EmailSenderDto(createSubscriptionSubject, email, '')
     this.emailClient.emit('send_email', JSON.stringify(data));
   }
 
   sendCancelSubscriptionEmail(email: string): void {
-    const data = new EmailDto(cancelSubscriptionSubject, email, '')
+    const data = new EmailSenderDto(cancelSubscriptionSubject, email, '')
     this.emailClient.emit('send_email', JSON.stringify(data));
   }
 }

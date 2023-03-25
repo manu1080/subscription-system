@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SubscriptionDto } from '@subscription-microservice/dto';
+import { SubscriptionDto } from '../dto/subscription.dto';
+import { EmailDto } from '../dto/email.dto';
 
 import { SubscriptionService } from './subscription.service';
 
@@ -20,7 +21,7 @@ export class SubscriptionController {
   @ApiOperation({ summary: 'Cancel subscription' })
   @ApiParam({ name: 'email' })
   @ApiResponse({ status: 200 })
-  cancelSubscription(@Param('email') email) {
+  cancelSubscription(@Param(ValidationPipe) email: EmailDto) {
     this.subscriptionService.cancelSubscription(email);
   }
 
