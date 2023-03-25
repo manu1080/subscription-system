@@ -34,11 +34,11 @@ export class SubscriptionRepository {
     return subscription || null;
   }
 
-  async cancel(email: string): Promise<void> {
+  async cancel(email: string): Promise<Subscription> {
     const subscription = await this.findByEmail(email);
     if (subscription) {
       subscription.isDeleted = true;
-      await this.subscriptionRepository.save(subscription);
+      return await this.subscriptionRepository.save(subscription);
     }
   }
 

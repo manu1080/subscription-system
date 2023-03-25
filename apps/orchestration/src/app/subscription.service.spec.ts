@@ -2,17 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SubscriptionService } from './subscription.service';
 import { ClientKafka } from '@nestjs/microservices';
 import { of } from 'rxjs';
-import { EmailService } from './email.service';
 import { EmailDto } from '../dto/email.dto';
 import { SubscriptionDto } from '../dto/subscription.dto';
 
 describe('SubscriptionService', () => {
   let subscriptionService: SubscriptionService;
   let clientKafkaMock: jest.Mocked<ClientKafka>;
-  let emailService: EmailService;
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         SubscriptionService,
         {
@@ -22,20 +20,12 @@ describe('SubscriptionService', () => {
             send: jest.fn(() => of({})),
             subscribeToResponseOf: jest.fn(),
           },
-        },
-        {
-          provide: EmailService,
-          useValue: {
-            sendSubscriptionEmail: jest.fn(),
-            sendCancelSubscriptionEmail: jest.fn(),
-          },
-        },
+        }
       ],
     }).compile();
 
     subscriptionService = module.get<SubscriptionService>(SubscriptionService);
     clientKafkaMock = module.get('SUBSCRIPTION_MICROSERVICE');
-    emailService = module.get<EmailService>(EmailService);
   });
 
   describe('createSubscription', () => {
@@ -56,9 +46,6 @@ describe('SubscriptionService', () => {
         JSON.stringify(subscriptionDto),
       );
 
-      expect(emailService.sendSubscriptionEmail).toHaveBeenCalledWith(
-        subscriptionDto.email,
-      );
     });
   });
 
@@ -73,9 +60,6 @@ describe('SubscriptionService', () => {
         JSON.stringify({ email: emailDto.email }),
       );
 
-      expect(emailService.sendCancelSubscriptionEmail).toHaveBeenCalledWith(
-        emailDto.email,
-      );
     });
   });
 

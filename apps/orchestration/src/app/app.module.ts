@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TimeoutMiddleware } from '../middlewares/timeout-middleware';
 import { EmailService } from './email.service';
+import { NotificationController } from './notification.controller';
 
 import { SubscriptionController } from './subscription.controller';
 import { SubscriptionService } from './subscription.service';
@@ -36,7 +37,7 @@ import { SubscriptionService } from './subscription.service';
       },
     ]),
   ],
-  controllers: [SubscriptionController],
+  controllers: [SubscriptionController, NotificationController],
   providers: [SubscriptionService, EmailService],
 })
 export class AppModule {

@@ -3,10 +3,12 @@ import { Subscription } from '../entities/subscription.entity';
 import { SubscriptionDto } from '../dto/subscription.dto';
 import { SubscriptionService } from './subscription.service';
 import { SubscriptionRepository } from './subscription.repository';
+import { NotificationService } from './notification.service';
 
 describe('SubscriptionService', () => {
   let service: SubscriptionService;
   let subscriptionRepository: SubscriptionRepository;
+  let notificationService: NotificationService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,6 +21,14 @@ describe('SubscriptionService', () => {
             cancel: jest.fn(),
             findOne: jest.fn(),
             getAll: jest.fn(),
+            findByEmail: jest.fn(),
+          },
+        },
+        {
+          provide: NotificationService,
+          useValue: {
+            createdSubscription: jest.fn(),
+            cancelledSubscription: jest.fn(),
           },
         },
       ],
@@ -26,10 +36,11 @@ describe('SubscriptionService', () => {
 
     service = module.get<SubscriptionService>(SubscriptionService);
     subscriptionRepository = module.get<SubscriptionRepository>(SubscriptionRepository);
+    notificationService = module.get<NotificationService>(NotificationService);
   });
 
   describe('createSubscription', () => {
-    it('should create a subscription', () => {
+    it('should create a subscription', async () => {
       const subscriptionDto: SubscriptionDto = {
         firstName: 'John',
         email: 'john@example.com',
@@ -45,20 +56,44 @@ describe('SubscriptionService', () => {
       expectedSubscription.dateOfBirth = subscriptionDto.dateOfBirth;
       expectedSubscription.consent = subscriptionDto.consent;
       expectedSubscription.newsletterId = subscriptionDto.newsletterId;
+      jest.spyOn(subscriptionRepository, 'findByEmail').mockResolvedValue(null);
+      jest.spyOn(subscriptionRepository, 'save').mockResolvedValueOnce(expectedSubscription);
 
-      service.createSubscription(subscriptionDto);
+      await service.createSubscription(subscriptionDto);
 
+      expect(subscriptionRepository.findByEmail).toHaveBeenCalledWith(subscriptionDto.email);
       expect(subscriptionRepository.save).toHaveBeenCalledWith(expectedSubscription);
+      expect(notificationService.createdSubscription).toHaveBeenCalledWith(subscriptionDto.email);
+    });
+
+    it('should not create a subscription or send notification when email already exists', async () => {
+      const subscriptionDto: SubscriptionDto = {
+        firstName: 'John',
+        email: 'john@example.com',
+        gender: 'female',
+        dateOfBirth: '1995-01-01',
+        consent: false,
+        newsletterId: 2,
+      };
+      jest.spyOn(subscriptionRepository, 'findByEmail').mockResolvedValue(subscriptionDto as Subscription);
+
+      await service.createSubscription(subscriptionDto);
+
+      expect(subscriptionRepository.findByEmail).toHaveBeenCalledWith(subscriptionDto.email);
+      expect(subscriptionRepository.save).not.toHaveBeenCalled();
+      expect(notificationService.createdSubscription).not.toHaveBeenCalled();
     });
   });
 
   describe('cancelSubscription', () => {
-    it('should cancel a subscription', () => {
+    it('should cancel a subscription', async () => {
       const email = 'test@example.com';
+      jest.spyOn(subscriptionRepository, 'cancel').mockResolvedValue(new Subscription());
 
-      service.cancelSubscription(email);
+      await service.cancelSubscription(email);
 
       expect(subscriptionRepository.cancel).toHaveBeenCalledWith(email);
+      expect(notificationService.cancelledSubscription).toHaveBeenCalledWith(email);
     });
   });
 
