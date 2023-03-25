@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: adidas_subscription
+      MYSQL_USER: adidas_user
+      MYSQL_PASSWORD: adidas_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
