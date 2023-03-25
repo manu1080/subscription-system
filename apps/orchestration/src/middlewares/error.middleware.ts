@@ -7,10 +7,11 @@ export class ErrorMiddleware implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception instanceof HttpException ? exception.getStatus() : 500;
+    const message = exception.response?.message ?? exception.message;
 
     response.status(status).json({
       statusCode: status,
-      message: exception.message,
+      message
     });
   }
 }

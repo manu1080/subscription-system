@@ -21,7 +21,7 @@ export class SubscriptionRepository {
         isDeleted: false,
       },
     });
-    return subscription || null;
+    return subscription || {};
   }
 
   async findByEmail(email: string) {
@@ -42,7 +42,7 @@ export class SubscriptionRepository {
     }
   }
 
- async getAll() {
+  async getAll() {
     return this.subscriptionRepository.find({
       where: {
         isDeleted: false

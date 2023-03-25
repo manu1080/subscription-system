@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { TimeoutMiddleware } from '../middlewares/timeout-middleware';
 import { EmailService } from './email.service';
 
 import { SubscriptionController } from './subscription.controller';
@@ -38,4 +39,8 @@ import { SubscriptionService } from './subscription.service';
   controllers: [SubscriptionController],
   providers: [SubscriptionService, EmailService],
 })
-export class AppModule { }
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TimeoutMiddleware).forRoutes('*');
+  }
+}
