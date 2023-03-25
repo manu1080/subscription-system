@@ -17,14 +17,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {
-      "@subscription-microservice/dto": [
-        "apps/subscription-microservice/src/dto/index.ts"
-      ],
-      "@email-microservice/dto": [
-        "apps/email-microservice/src/dto/index.ts"
-      ]
-    }
+    "paths": {}
   },
   "exclude": [
     "node_modules",
