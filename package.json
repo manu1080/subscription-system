@@ -1,17 +1,35 @@
 {
-  "name": "subsciption-micro-service",
+  "name": "adidas-subscription-system",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start-subscription": "nx serve subscription-microservice",
+    "start-subscription:docker": "docker-compose -f apps/subscription-microservice/docker-compose.yml up -d",
+    "start-email": "nx serve email-microservice",
+    "start-orchestration": "nx serve orchestration",
+    "start-orchestration:prod": "nx run orchestration:serve:production",
+    "start-db": "docker-compose -f apps/subscription-microservice/docker-compose.yml up",
+    "start-kafka": "docker-compose up"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/microservices": "^9.3.11",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.2.1",
+    "@nestjs/typeorm": "^9.0.1",
     "axios": "^1.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "dotenv": "^16.0.3",
+    "kafkajs": "^2.2.4",
+    "mysql2": "^3.2.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
-    "tslib": "^2.3.0"
+    "swagger-ui-express": "^4.6.2",
+    "tslib": "^2.3.0",
+    "typeorm": "^0.3.12"
   },
   "devDependencies": {
     "@nestjs/schematics": "^9.0.0",
