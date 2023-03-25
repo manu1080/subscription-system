@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { SubscriptionRepository } from './subscription.repository';
-import { AppService } from './app.service';
+import { SubscriptionService } from './subscription.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Subscription } from '../entities';
 
@@ -19,6 +19,6 @@ import { Subscription } from '../entities';
   TypeOrmModule.forFeature([Subscription]),
   ],
   controllers: [AppController],
-  providers: [SubscriptionRepository, AppService],
+  providers: [SubscriptionRepository, SubscriptionService],
 })
 export class AppModule { }

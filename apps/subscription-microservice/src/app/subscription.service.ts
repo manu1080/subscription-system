@@ -4,7 +4,7 @@ import { Subscription } from '../entities';
 import { SubscriptionRepository } from './subscription.repository';
 
 @Injectable()
-export class AppService {
+export class SubscriptionService {
   constructor(private readonly subscriptionRepository: SubscriptionRepository) { }
 
   createSubscription(data: SubscriptionDto): void {

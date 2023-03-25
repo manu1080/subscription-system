@@ -2,30 +2,30 @@ import { Controller, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { SubscriptionDto } from '../dto/subscription.dto';
 
-import { AppService } from './app.service';
+import { SubscriptionService } from './subscription.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly subscriptionService: SubscriptionService) { }
 
   @EventPattern('create_subscription')
   handleSubscriptionCreate(@Payload(ValidationPipe) data: SubscriptionDto) {
-    this.appService.createSubscription(data);
+    this.subscriptionService.createSubscription(data);
   }
 
   @EventPattern('cancel_subscription')
   handleSubscriptionCancel(@Payload('email') email: string) {
-    this.appService.cancelSubscription(email);
+    this.subscriptionService.cancelSubscription(email);
   }
 
   @MessagePattern('get_subscriptions')
   async handleGetSubscriptions() {
-    return await this.appService.getAllSubscription();
+    return await this.subscriptionService.getAllSubscription();
   }
 
   @MessagePattern('get_subscription_by_id')
   async handleGetSubscription(@Payload('id', ParseIntPipe) id: number) {
-    return await this.appService.getSubscription(id);
+    return await this.subscriptionService.getSubscription(id);
   }
 
 }
