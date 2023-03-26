@@ -35,25 +35,23 @@ This microservice contains the subscription database and manages all subscriptio
 
 1. Clone this repository to your local machine.
 
-2. Run `npm install` to install the dependencies.
+2. Create a MySQL database and update the credentials in the `.env` file.
 
-3. Create a MySQL database and update the credentials in the `.env` file.
+3. Install the required dependencies by running `npm install`.
 
-4. Install the required dependencies by running `npm install`.
+4. Run Kafka with Docker on `localhost:29092` using the command `npm run start-kafka`.
 
-5. Run Kafka with Docker on `localhost:29092` using the command `npm run start-kafka`.
+5. Run MySQL with Docker on `localhost:3306` using the command `npm run start-db`.
 
-6. Run MySQL with Docker on `localhost:3306` using the command `npm run start-db`.
+6. Run the Orchestration Microservice with the command `npm run start-orchestration`.
 
-7. Run the Orchestration Microservice with the command `npm run start-orchestration`.
+7. Run the Email Microservice with the command `npm run start-email`.
 
-8. Run the Email Microservice with the command `npm run start-email`.
+8. Run the Subscription Microservice with the command `npm run start-subscription`.
 
-9. Run the Subscription Microservice with the command `npm run start-subscription`.
+9. Access the Swagger documentation at `http://localhost:3000/api`.
 
-10. Access the Swagger documentation at `http://localhost:3000/api`.
-
-11. To run unit tests with Jest, use the command `npm run start-test`.
+10. To run unit tests with Jest, use the command `npm run start-test`.
 
 ## Author
 
