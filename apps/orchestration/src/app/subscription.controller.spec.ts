@@ -19,6 +19,7 @@ describe('SubscriptionController', () => {
             cancelSubscription: jest.fn(),
             getAll: jest.fn(),
             getSubscriptionById: jest.fn(),
+            createdSubscriptionAndReturnId: jest.fn(),
           },
         },
       ],
@@ -48,6 +49,41 @@ describe('SubscriptionController', () => {
       await controller.createSubscription(subscriptionDto);
 
       expect(createSubscriptionSpy).toHaveBeenCalledWith(subscriptionDto);
+    });
+  });
+
+  describe('createSubscriptionAndReturnId', () => {
+    it('should call createdSubscriptionAndReturnId in service with correct input', async () => {
+      const subscriptionDto: SubscriptionDto = {
+        firstName: 'John',
+        email: 'john@example.com',
+        gender: 'male',
+        dateOfBirth: '1990-01-01',
+        consent: true,
+        newsletterId: 1,
+      };
+
+      const createdSubscriptionAndReturnIdSpy = jest.spyOn(subscriptionService, 'createdSubscriptionAndReturnId').mockResolvedValueOnce({id:1});
+
+      const response = await controller.createSubscriptionAndReturnId(subscriptionDto);
+
+      expect(createdSubscriptionAndReturnIdSpy).toHaveBeenCalledWith(subscriptionDto);
+      expect(response).toEqual({id:1});
+    });
+
+    it('should throw an error if createdSubscriptionAndReturnId in service fails', async () => {
+      const subscriptionDto: SubscriptionDto = {
+        firstName: 'John',
+        email: 'john@example.com',
+        gender: 'male',
+        dateOfBirth: '1990-01-01',
+        consent: true,
+        newsletterId: 1,
+      };
+
+      jest.spyOn(subscriptionService, 'createdSubscriptionAndReturnId').mockRejectedValueOnce(new Error());
+
+      await expect(controller.createSubscriptionAndReturnId(subscriptionDto)).rejects.toThrowError();
     });
   });
 

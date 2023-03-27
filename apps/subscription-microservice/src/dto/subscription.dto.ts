@@ -1,7 +1,8 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class SubscriptionDto {
   @IsString()
+  @IsOptional()
   firstName: string;
 
   @IsEmail()
@@ -9,6 +10,7 @@ export class SubscriptionDto {
   email: string;
 
   @IsString()
+  @IsOptional()
   gender: string;
 
   @IsString()

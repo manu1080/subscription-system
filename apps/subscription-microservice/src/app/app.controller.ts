@@ -18,6 +18,11 @@ export class AppController {
     this.subscriptionService.cancelSubscription(email);
   }
 
+  @MessagePattern('create_subscription_return_id')
+  async handleCreateSubscriptionAndReturnId(@Payload(ValidationPipe) data: SubscriptionDto) {
+    return await this.subscriptionService.createSubscription(data);
+  }
+
   @MessagePattern('get_subscriptions')
   async handleGetSubscriptions() {
     return await this.subscriptionService.getAllSubscription();

@@ -17,6 +17,13 @@ export class SubscriptionController {
     this.subscriptionService.createSubscription(subscriptionDto);
   }
 
+  @Post('create-return-id')
+  @ApiOperation({ summary: 'Create subscriptions and return id' })
+  @ApiResponse({ status: 200 })
+  async createSubscriptionAndReturnId(@Body(ValidationPipe) subscriptionDto: SubscriptionDto) {
+    return await this.subscriptionService.createdSubscriptionAndReturnId(subscriptionDto);
+  }
+
   @Post('cancel/:email')
   @ApiOperation({ summary: 'Cancel subscription' })
   @ApiParam({ name: 'email' })

@@ -59,10 +59,11 @@ describe('SubscriptionService', () => {
       jest.spyOn(subscriptionRepository, 'findByEmail').mockResolvedValue(null);
       jest.spyOn(subscriptionRepository, 'save').mockResolvedValueOnce(expectedSubscription);
 
-      await service.createSubscription(subscriptionDto);
+      const result = await service.createSubscription(subscriptionDto);
 
       expect(subscriptionRepository.findByEmail).toHaveBeenCalledWith(subscriptionDto.email);
       expect(subscriptionRepository.save).toHaveBeenCalledWith(expectedSubscription);
+      expect(result).toStrictEqual(JSON.stringify(expectedSubscription));
       expect(notificationService.createdSubscription).toHaveBeenCalledWith(subscriptionDto.email);
     });
 

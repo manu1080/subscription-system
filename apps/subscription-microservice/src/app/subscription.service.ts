@@ -9,12 +9,14 @@ export class SubscriptionService {
   constructor(private readonly subscriptionRepository: SubscriptionRepository,
     private readonly notificationService: NotificationService) { }
 
-  async createSubscription(data: SubscriptionDto): Promise<void> {
+  async createSubscription(data: SubscriptionDto): Promise<string> {
     const subscriptionEntity = data as Subscription
     if (await this.validateSubscription(data.email)) return;
 
     const createdSubscription = await this.subscriptionRepository.save(subscriptionEntity);
     if (createdSubscription) this.notificationService.createdSubscription(createdSubscription.email);
+
+    return JSON.stringify(createdSubscription);
   }
 
   async cancelSubscription(email: string): Promise<void> {

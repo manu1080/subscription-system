@@ -1,6 +1,6 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { from } from 'rxjs';
+import { from, throwError } from 'rxjs';
 import { EmailDto } from '../dto/email.dto';
 import { SubscriptionDto } from '../dto/subscription.dto';
 
@@ -12,6 +12,13 @@ export class SubscriptionService implements OnModuleInit {
 
   createSubscription(subscriptionDto: SubscriptionDto) {
     this.subscriptionClient.emit('create_subscription', JSON.stringify(subscriptionDto));
+  }
+
+  async createdSubscriptionAndReturnId(subscriptionDto: SubscriptionDto) {
+    const result = await from(this.subscriptionClient.send('create_subscription_return_id', JSON.stringify(subscriptionDto)))
+      .toPromise();
+    if (!result) throw new Error();;
+    return {id :result.id};
   }
 
   cancelSubscription(emailDto: EmailDto) {
@@ -33,5 +40,6 @@ export class SubscriptionService implements OnModuleInit {
   onModuleInit() {
     this.subscriptionClient.subscribeToResponseOf('get_subscription_by_id');
     this.subscriptionClient.subscribeToResponseOf('get_subscriptions');
+    this.subscriptionClient.subscribeToResponseOf('create_subscription_return_id');
   }
 }

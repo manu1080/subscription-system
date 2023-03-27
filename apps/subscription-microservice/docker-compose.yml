@@ -5,9 +5,11 @@ services:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: adidas_subscription
-      MYSQL_USER: adidas_user
-      MYSQL_PASSWORD: adidas_password
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    env_file:
+      - .env
     ports:
       - "3306:3306"
     volumes:

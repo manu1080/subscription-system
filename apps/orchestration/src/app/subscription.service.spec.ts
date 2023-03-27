@@ -49,6 +49,47 @@ describe('SubscriptionService', () => {
     });
   });
 
+  describe('createdSubscriptionAndReturnId', () => {
+    it('should create subscription and return id', async () => {
+      const subscriptionDto: SubscriptionDto = {
+        firstName: 'John',
+        email: 'john@example.com',
+        gender: 'male',
+        dateOfBirth: '1990-01-01',
+        consent: true,
+        newsletterId: 1,
+      };
+      const subscription = { id: 1, ...subscriptionDto };
+      clientKafkaMock.send.mockResolvedValueOnce(subscription as never);
+  
+      const result = await subscriptionService.createdSubscriptionAndReturnId(subscriptionDto);
+  
+      expect(result).toStrictEqual({id:subscription.id});
+      expect(clientKafkaMock.send).toHaveBeenCalledWith(
+        'create_subscription_return_id',
+        JSON.stringify(subscriptionDto),
+      );
+    });
+
+    it('should throw an error if subscription is not created', async () => {
+      const subscriptionDto: SubscriptionDto = {
+        firstName: 'John',
+        email: 'john@example.com',
+        gender: 'male',
+        dateOfBirth: '1990-01-01',
+        consent: true,
+        newsletterId: 1,
+      };
+  
+      clientKafkaMock.send.mockResolvedValueOnce(null as never);
+  
+      await expect(subscriptionService.createdSubscriptionAndReturnId(subscriptionDto)).rejects.toThrow();
+      expect(clientKafkaMock.send).toHaveBeenCalledWith(
+        'create_subscription_return_id',
+        JSON.stringify(subscriptionDto),
+      );
+    });
+  });
   describe('cancelSubscription', () => {
     it('should emit "cancel_subscription" event and send cancel subscription email', () => {
       const emailDto: EmailDto = { email: 'johndoe@example.com' };
